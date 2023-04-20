@@ -43,10 +43,10 @@ describe('CallbackValidation', () => {
   })
 
   beforeEach('load fixture', async () => {
-    ;({ callbackValidation, tokens, factory } = await loadFixture(callbackValidationFixture))
+    ; ({ callbackValidation, tokens, factory } = await loadFixture(callbackValidationFixture))
   })
 
-  it('reverts when called from an address other than the associated UniswapV3Pool', async () => {
+  it('reverts when called from an address other than the associated PegasysV2Pool', async () => {
     expect(
       callbackValidation
         .connect(nonpairAddr)

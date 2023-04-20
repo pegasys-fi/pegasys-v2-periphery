@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.6.8 <0.8.0;
 
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
-import '@uniswap/v3-core/contracts/libraries/FixedPoint128.sol';
-import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
-import '@uniswap/v3-core/contracts/libraries/Tick.sol';
+import '@pollum-io/v2-core/contracts/interfaces/IPegasysV2Pool.sol';
+import '@pollum-io/v2-core/contracts/libraries/FixedPoint128.sol';
+import '@pollum-io/v2-core/contracts/libraries/TickMath.sol';
+import '@pollum-io/v2-core/contracts/libraries/Tick.sol';
 import '../interfaces/INonfungiblePositionManager.sol';
 import './LiquidityAmounts.sol';
 import './PoolAddress.sol';
 import './PositionKey.sol';
 
-/// @title Returns information about the token value held in a Uniswap V3 NFT
+/// @title Returns information about the token value held in a Pegasys V2 NFT
 library PositionValue {
     /// @notice Returns the total amounts of token0 and token1, i.e. the sum of fees and principal
     /// that a given nonfungible position manager token is worth
-    /// @param positionManager The Uniswap V3 NonfungiblePositionManager
+    /// @param positionManager The Pegasys V2 NonfungiblePositionManager
     /// @param tokenId The tokenId of the token for which to get the total value
     /// @param sqrtRatioX96 The square root price X96 for which to calculate the principal amounts
     /// @return amount0 The total amount of token0 including principal and fees
@@ -31,7 +31,7 @@ library PositionValue {
 
     /// @notice Calculates the principal (currently acting as liquidity) owed to the token owner in the event
     /// that the position is burned
-    /// @param positionManager The Uniswap V3 NonfungiblePositionManager
+    /// @param positionManager The Pegasys V2 NonfungiblePositionManager
     /// @param tokenId The tokenId of the token for which to get the total principal owed
     /// @param sqrtRatioX96 The square root price X96 for which to calculate the principal amounts
     /// @return amount0 The principal amount of token0
@@ -66,7 +66,7 @@ library PositionValue {
     }
 
     /// @notice Calculates the total fees owed to the token owner
-    /// @param positionManager The Uniswap V3 NonfungiblePositionManager
+    /// @param positionManager The Pegasys V2 NonfungiblePositionManager
     /// @param tokenId The tokenId of the token for which to get the total fees owed
     /// @return amount0 The amount of fees owed in token0
     /// @return amount1 The amount of fees owed in token1
@@ -115,7 +115,7 @@ library PositionValue {
     {
         (uint256 poolFeeGrowthInside0LastX128, uint256 poolFeeGrowthInside1LastX128) =
             _getFeeGrowthInside(
-                IUniswapV3Pool(
+                IPegasysV2Pool(
                     PoolAddress.computeAddress(
                         positionManager.factory(),
                         PoolAddress.PoolKey({token0: feeParams.token0, token1: feeParams.token1, fee: feeParams.fee})
@@ -143,7 +143,7 @@ library PositionValue {
     }
 
     function _getFeeGrowthInside(
-        IUniswapV3Pool pool,
+        IPegasysV2Pool pool,
         int24 tickLower,
         int24 tickUpper
     ) private view returns (uint256 feeGrowthInside0X128, uint256 feeGrowthInside1X128) {

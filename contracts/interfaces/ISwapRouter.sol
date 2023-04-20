@@ -2,11 +2,11 @@
 pragma solidity >=0.7.5;
 pragma abicoder v2;
 
-import '@uniswap/v3-core/contracts/interfaces/callback/IUniswapV3SwapCallback.sol';
+import '@pollum-io/v2-core/contracts/interfaces/callback/IPegasysV2SwapCallback.sol';
 
 /// @title Router token swapping functionality
-/// @notice Functions for swapping tokens via Uniswap V3
-interface ISwapRouter is IUniswapV3SwapCallback {
+/// @notice Functions for swapping tokens via Pegasys V2
+interface ISwapRouter is IPegasysV2SwapCallback {
     struct ExactInputSingleParams {
         address tokenIn;
         address tokenOut;

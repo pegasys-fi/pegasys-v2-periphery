@@ -2,10 +2,10 @@
 pragma solidity >=0.7.0;
 pragma abicoder v2;
 
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
-import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
-import '@uniswap/v3-core/contracts/libraries/BitMath.sol';
-import '@uniswap/v3-core/contracts/libraries/FullMath.sol';
+import '@pollum-io/v2-core/contracts/interfaces/IPegasysV2Pool.sol';
+import '@pollum-io/v2-core/contracts/libraries/TickMath.sol';
+import '@pollum-io/v2-core/contracts/libraries/BitMath.sol';
+import '@pollum-io/v2-core/contracts/libraries/FullMath.sol';
 import '@openzeppelin/contracts/utils/Strings.sol';
 import '@openzeppelin/contracts/math/SafeMath.sol';
 import '@openzeppelin/contracts/math/SignedSafeMath.sol';
@@ -112,7 +112,7 @@ library NFTDescriptor {
         return
             string(
                 abi.encodePacked(
-                    'This NFT represents a liquidity position in a Uniswap V3 ',
+                    'This NFT represents a liquidity position in a Pegasys V2 ',
                     quoteTokenSymbol,
                     '-',
                     baseTokenSymbol,
@@ -160,7 +160,7 @@ library NFTDescriptor {
         return
             string(
                 abi.encodePacked(
-                    'Uniswap - ',
+                    'Pegasys - ',
                     feeTier,
                     ' - ',
                     escapeQuotes(params.quoteTokenSymbol),

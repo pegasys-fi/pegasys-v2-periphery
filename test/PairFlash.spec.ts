@@ -5,10 +5,10 @@ import {
   MockTimeNonfungiblePositionManager,
   MockTimeSwapRouter,
   PairFlash,
-  IUniswapV3Pool,
+  IPegasysV2Pool,
   TestERC20,
   TestERC20Metadata,
-  IUniswapV3Factory,
+  IPegasysV2Factory,
   NFTDescriptor,
   Quoter,
   SwapRouter,
@@ -31,7 +31,7 @@ describe('PairFlash test', () => {
   let nft: MockTimeNonfungiblePositionManager
   let token0: TestERC20
   let token1: TestERC20
-  let factory: IUniswapV3Factory
+  let factory: IPegasysV2Factory
   let quoter: Quoter
 
   async function createPool(tokenAddressA: string, tokenAddressB: string, fee: FeeAmount, price: BigNumber) {
@@ -87,7 +87,7 @@ describe('PairFlash test', () => {
   })
 
   beforeEach('load fixture', async () => {
-    ;({ factory, token0, token1, flash, nft, quoter } = await loadFixture(flashFixture))
+    ; ({ factory, token0, token1, flash, nft, quoter } = await loadFixture(flashFixture))
 
     await token0.approve(nft.address, MaxUint128)
     await token1.approve(nft.address, MaxUint128)

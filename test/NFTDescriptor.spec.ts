@@ -60,7 +60,7 @@ describe('NFTDescriptor', () => {
   })
 
   beforeEach('load fixture', async () => {
-    ;({ nftDescriptor, tokens } = await loadFixture(nftDescriptorFixture))
+    ; ({ nftDescriptor, tokens } = await loadFixture(nftDescriptorFixture))
   })
 
   describe('#constructTokenURI', () => {
@@ -636,7 +636,7 @@ describe('NFTDescriptor', () => {
           let ratio: BigNumber | number
           let decimals0: number
           let decimals1: number
-          ;[ratio, decimals0, decimals1] = inputs[i]
+            ;[ratio, decimals0, decimals1] = inputs[i]
           let result = await nftDescriptor.fixedPointToDecimalString(ratio, decimals0, decimals1)
           expect(formatSqrtRatioX96(ratio, decimals0, decimals1)).to.eq(result)
         }
@@ -814,7 +814,7 @@ describe('NFTDescriptor', () => {
       tokenId = 123
       quoteTokenAddress = '0x1234567890123456789123456789012345678901'
       baseTokenAddress = '0xabcdeabcdefabcdefabcdefabcdefabcdefabcdf'
-      quoteTokenSymbol = 'UNI'
+      quoteTokenSymbol = 'PSYS'
       baseTokenSymbol = 'WETH'
       tickLower = -1000
       tickUpper = 2000
@@ -897,8 +897,8 @@ describe('NFTDescriptor', () => {
     quoteTokenSymbol = quoteTokenSymbol.replace(/"/gi, '"')
     baseTokenSymbol = baseTokenSymbol.replace(/"/gi, '"')
     return {
-      name: `Uniswap - ${feeTier} - ${quoteTokenSymbol}/${baseTokenSymbol} - ${prices}`,
-      description: `This NFT represents a liquidity position in a Uniswap V3 ${quoteTokenSymbol}-${baseTokenSymbol} pool. The owner of this NFT can modify or redeem the position.\n\
+      name: `Pegasys - ${feeTier} - ${quoteTokenSymbol}/${baseTokenSymbol} - ${prices}`,
+      description: `This NFT represents a liquidity position in a Pegasys V2 ${quoteTokenSymbol}-${baseTokenSymbol} pool. The owner of this NFT can modify or redeem the position.\n\
 \nPool Address: ${poolAddress}\n${quoteTokenSymbol} Address: ${quoteTokenAddress.toLowerCase()}\n${baseTokenSymbol} Address: ${baseTokenAddress.toLowerCase()}\n\
 Fee Tier: ${feeTier}\nToken ID: ${tokenId}\n\n⚠️ DISCLAIMER: Due diligence is imperative when assessing this NFT. Make sure token addresses match the expected tokens, as \
 token symbols may be imitated.`,

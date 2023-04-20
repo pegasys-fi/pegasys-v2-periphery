@@ -2,8 +2,8 @@ import { Fixture } from 'ethereum-waffle'
 import { constants, Contract, Wallet } from 'ethers'
 import { ethers, waffle } from 'hardhat'
 import {
-  IUniswapV2Pair,
-  IUniswapV3Factory,
+  IPegasysPair,
+  IPegasysV2Factory,
   IWETH9,
   MockTimeNonfungiblePositionManager,
   TestERC20,
@@ -12,7 +12,7 @@ import {
 import completeFixture from './shared/completeFixture'
 import { v2FactoryFixture } from './shared/externalFixtures'
 
-import { abi as PAIR_V2_ABI } from '@uniswap/v2-core/build/UniswapV2Pair.json'
+import { abi as PAIR_V2_ABI } from '@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/PegasysPair.sol/PegasysPair.json'
 import { expect } from 'chai'
 import { FeeAmount } from './shared/constants'
 import { encodePriceSqrt } from './shared/encodePriceSqrt'
@@ -25,7 +25,7 @@ describe('V3Migrator', () => {
 
   const migratorFixture: Fixture<{
     factoryV2: Contract
-    factoryV3: IUniswapV3Factory
+    factoryV3: IPegasysV2Factory
     token: TestERC20
     weth9: IWETH9
     nft: MockTimeNonfungiblePositionManager
@@ -58,12 +58,12 @@ describe('V3Migrator', () => {
   }
 
   let factoryV2: Contract
-  let factoryV3: IUniswapV3Factory
+  let factoryV3: IPegasysV2Factory
   let token: TestERC20
   let weth9: IWETH9
   let nft: MockTimeNonfungiblePositionManager
   let migrator: V3Migrator
-  let pair: IUniswapV2Pair
+  let pair: IPegasysPair
 
   let loadFixture: ReturnType<typeof waffle.createFixtureLoader>
 
@@ -77,7 +77,7 @@ describe('V3Migrator', () => {
   })
 
   beforeEach('load fixture', async () => {
-    ;({ factoryV2, factoryV3, token, weth9, nft, migrator } = await loadFixture(migratorFixture))
+    ; ({ factoryV2, factoryV3, token, weth9, nft, migrator } = await loadFixture(migratorFixture))
   })
 
   beforeEach('add V2 liquidity', async () => {
@@ -85,7 +85,7 @@ describe('V3Migrator', () => {
 
     const pairAddress = await factoryV2.getPair(token.address, weth9.address)
 
-    pair = new ethers.Contract(pairAddress, PAIR_V2_ABI, wallet) as IUniswapV2Pair
+    pair = new ethers.Contract(pairAddress, PAIR_V2_ABI, wallet) as IPegasysPair
 
     await token.transfer(pair.address, 10000)
     await weth9.transfer(pair.address, 10000)

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity =0.7.6;
 
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol';
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
+import '@pollum-io/v2-core/contracts/interfaces/IPegasysV2Factory.sol';
+import '@pollum-io/v2-core/contracts/interfaces/IPegasysV2Pool.sol';
 
 import './PeripheryImmutableState.sol';
 import '../interfaces/IPoolInitializer.sol';
@@ -17,15 +17,15 @@ abstract contract PoolInitializer is IPoolInitializer, PeripheryImmutableState {
         uint160 sqrtPriceX96
     ) external payable override returns (address pool) {
         require(token0 < token1);
-        pool = IUniswapV3Factory(factory).getPool(token0, token1, fee);
+        pool = IPegasysV2Factory(factory).getPool(token0, token1, fee);
 
         if (pool == address(0)) {
-            pool = IUniswapV3Factory(factory).createPool(token0, token1, fee);
-            IUniswapV3Pool(pool).initialize(sqrtPriceX96);
+            pool = IPegasysV2Factory(factory).createPool(token0, token1, fee);
+            IPegasysV2Pool(pool).initialize(sqrtPriceX96);
         } else {
-            (uint160 sqrtPriceX96Existing, , , , , , ) = IUniswapV3Pool(pool).slot0();
+            (uint160 sqrtPriceX96Existing, , , , , , ) = IPegasysV2Pool(pool).slot0();
             if (sqrtPriceX96Existing == 0) {
-                IUniswapV3Pool(pool).initialize(sqrtPriceX96);
+                IPegasysV2Pool(pool).initialize(sqrtPriceX96);
             }
         }
     }
