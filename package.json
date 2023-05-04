@@ -5,7 +5,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://pegasys.fi",
   "keywords": [
     "pegasys",
@@ -32,7 +32,7 @@
     "@openzeppelin/contracts": "3.4.2-solc-0.7",
     "@uniswap/lib": "^4.0.1-alpha",
     "@pollum-io/pegasys-protocol": "0.0.17",
-    "@pollum-io/v2-core": "0.0.1",
+    "@pollum-io/v2-core": "0.0.2",
     "base64-sol": "1.0.1"
   },
   "devDependencies": {
