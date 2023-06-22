@@ -49,13 +49,13 @@ describe('QuoterV2', function () {
 
   before('create fixture loader', async () => {
     const wallets = await (ethers as any).getSigners()
-    ;[wallet, trader] = wallets
+      ;[wallet, trader] = wallets
     loadFixture = waffle.createFixtureLoader(wallets)
   })
 
   // helper for getting weth and token balances
   beforeEach('load fixture', async () => {
-    ;({ tokens, nft, quoter } = await loadFixture(swapRouterFixture))
+    ; ({ tokens, nft, quoter } = await loadFixture(swapRouterFixture))
   })
 
   describe('quotes', () => {

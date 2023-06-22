@@ -3,14 +3,14 @@ import { constants, Contract, Wallet } from 'ethers'
 import { ethers, waffle } from 'hardhat'
 import {
   IPegasysPair,
-  IPegasysV2Factory,
+  IPegasysV3Factory,
   IWETH9,
   MockTimeNonfungiblePositionManager,
   TestERC20,
   V3Migrator,
 } from '../typechain'
 import completeFixture from './shared/completeFixture'
-import { v2FactoryFixture } from './shared/externalFixtures'
+import { v3FactoryFixture } from './shared/externalFixtures'
 
 import { abi as PAIR_V2_ABI } from '@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/PegasysPair.sol/PegasysPair.json'
 import { expect } from 'chai'
@@ -25,7 +25,7 @@ describe('V3Migrator', () => {
 
   const migratorFixture: Fixture<{
     factoryV2: Contract
-    factoryV3: IPegasysV2Factory
+    factoryV3: IPegasysV3Factory
     token: TestERC20
     weth9: IWETH9
     nft: MockTimeNonfungiblePositionManager
@@ -33,7 +33,7 @@ describe('V3Migrator', () => {
   }> = async (wallets, provider) => {
     const { factory, tokens, nft, weth9 } = await completeFixture(wallets, provider)
 
-    const { factory: factoryV2 } = await v2FactoryFixture(wallets, provider)
+    const { factory: factoryV2 } = await v3FactoryFixture(wallets, provider)
 
     const token = tokens[0]
     await token.approve(factoryV2.address, constants.MaxUint256)
@@ -58,7 +58,7 @@ describe('V3Migrator', () => {
   }
 
   let factoryV2: Contract
-  let factoryV3: IPegasysV2Factory
+  let factoryV3: IPegasysV3Factory
   let token: TestERC20
   let weth9: IWETH9
   let nft: MockTimeNonfungiblePositionManager

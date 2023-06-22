@@ -46,7 +46,7 @@ describe('CallbackValidation', () => {
     ; ({ callbackValidation, tokens, factory } = await loadFixture(callbackValidationFixture))
   })
 
-  it('reverts when called from an address other than the associated PegasysV2Pool', async () => {
+  it('reverts when called from an address other than the associated PegasysV3Pool', async () => {
     expect(
       callbackValidation
         .connect(nonpairAddr)

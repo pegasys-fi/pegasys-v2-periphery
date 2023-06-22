@@ -2,21 +2,19 @@
 pragma solidity >=0.5.0;
 pragma abicoder v2;
 
-import '@pollum-io/v2-core/contracts/interfaces/IPegasysV2Pool.sol';
+import '@pollum-io/v3-core/contracts/interfaces/IPegasysV3Pool.sol';
 
 import '../interfaces/ITickLens.sol';
 
 /// @title Tick Lens contract
 contract TickLens is ITickLens {
     /// @inheritdoc ITickLens
-    function getPopulatedTicksInWord(address pool, int16 tickBitmapIndex)
-        public
-        view
-        override
-        returns (PopulatedTick[] memory populatedTicks)
-    {
+    function getPopulatedTicksInWord(
+        address pool,
+        int16 tickBitmapIndex
+    ) public view override returns (PopulatedTick[] memory populatedTicks) {
         // fetch bitmap
-        uint256 bitmap = IPegasysV2Pool(pool).tickBitmap(tickBitmapIndex);
+        uint256 bitmap = IPegasysV3Pool(pool).tickBitmap(tickBitmapIndex);
 
         // calculate the number of populated ticks
         uint256 numberOfPopulatedTicks;
@@ -25,12 +23,12 @@ contract TickLens is ITickLens {
         }
 
         // fetch populated tick data
-        int24 tickSpacing = IPegasysV2Pool(pool).tickSpacing();
+        int24 tickSpacing = IPegasysV3Pool(pool).tickSpacing();
         populatedTicks = new PopulatedTick[](numberOfPopulatedTicks);
         for (uint256 i = 0; i < 256; i++) {
             if (bitmap & (1 << i) > 0) {
                 int24 populatedTick = ((int24(tickBitmapIndex) << 8) + int24(i)) * tickSpacing;
-                (uint128 liquidityGross, int128 liquidityNet, , , , , , ) = IPegasysV2Pool(pool).ticks(populatedTick);
+                (uint128 liquidityGross, int128 liquidityNet, , , , , , ) = IPegasysV3Pool(pool).ticks(populatedTick);
                 populatedTicks[--numberOfPopulatedTicks] = PopulatedTick({
                     tick: populatedTick,
                     liquidityNet: liquidityNet,

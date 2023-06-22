@@ -8,12 +8,12 @@ import {
   MockTimeSwapRouter,
   NonfungibleTokenPositionDescriptor,
   TestERC20,
-  IPegasysV2Factory,
+  IPegasysV3Factory,
 } from '../../typechain'
 
 const completeFixture: Fixture<{
   weth9: IWETH9
-  factory: IPegasysV2Factory
+  factory: IPegasysV3Factory
   router: MockTimeSwapRouter
   nft: MockTimeNonfungiblePositionManager
   nftDescriptor: NonfungibleTokenPositionDescriptor
@@ -37,8 +37,8 @@ const completeFixture: Fixture<{
   })
   const nftDescriptor = (await positionDescriptorFactory.deploy(
     tokens[0].address,
-    // 'ETH' as a bytes32 string
-    '0x4554480000000000000000000000000000000000000000000000000000000000'
+    // 'SYS' as a bytes32 string
+    '0x5359530000000000000000000000000000000000000000000000000000000000'
   )) as NonfungibleTokenPositionDescriptor
 
   const positionManagerFactory = await ethers.getContractFactory('MockTimeNonfungiblePositionManager')
