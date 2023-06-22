@@ -2,9 +2,9 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import '@pollum-io/v2-core/contracts/libraries/SafeCast.sol';
-import '@pollum-io/v2-core/contracts/libraries/TickMath.sol';
-import '@pollum-io/v2-core/contracts/interfaces/IPegasysV2Pool.sol';
+import '@pollum-io/v3-core/contracts/libraries/SafeCast.sol';
+import '@pollum-io/v3-core/contracts/libraries/TickMath.sol';
+import '@pollum-io/v3-core/contracts/interfaces/IPegasysV3Pool.sol';
 
 import './interfaces/ISwapRouter.sol';
 import './base/PeripheryImmutableState.sol';
@@ -17,8 +17,8 @@ import './libraries/PoolAddress.sol';
 import './libraries/CallbackValidation.sol';
 import './interfaces/external/IWETH9.sol';
 
-/// @title Pegasys V2 Swap Router
-/// @notice Router for stateless execution of swaps against Pegasys V2
+/// @title Pegasys V3 Swap Router
+/// @notice Router for stateless execution of swaps against Pegasys V3
 contract SwapRouter is
     ISwapRouter,
     PeripheryImmutableState,
@@ -40,8 +40,8 @@ contract SwapRouter is
     constructor(address _factory, address _WETH9) PeripheryImmutableState(_factory, _WETH9) {}
 
     /// @dev Returns the pool for the given token pair and fee. The pool contract may or may not exist.
-    function getPool(address tokenA, address tokenB, uint24 fee) private view returns (IPegasysV2Pool) {
-        return IPegasysV2Pool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
+    function getPool(address tokenA, address tokenB, uint24 fee) private view returns (IPegasysV3Pool) {
+        return IPegasysV3Pool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
     }
 
     struct SwapCallbackData {
@@ -49,8 +49,8 @@ contract SwapRouter is
         address payer;
     }
 
-    /// @inheritdoc IPegasysV2SwapCallback
-    function pegasysV2SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata _data) external override {
+    /// @inheritdoc IPegasysV3SwapCallback
+    function pegasysV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata _data) external override {
         require(amount0Delta > 0 || amount1Delta > 0); // swaps entirely within 0-liquidity regions are not supported
         SwapCallbackData memory data = abi.decode(_data, (SwapCallbackData));
         (address tokenIn, address tokenOut, uint24 fee) = data.path.decodeFirstPool();

@@ -1,8 +1,8 @@
-import { abi as IPegasysV2PoolABI } from '@pollum-io/v2-core/artifacts/contracts/interfaces/IPegasysV2Pool.sol/IPegasysV2Pool.json'
+import { abi as IPegasysV3PoolABI } from '@pollum-io/v3-core/artifacts/contracts/interfaces/IPegasysV3Pool.sol/IPegasysV3Pool.json'
 import { Fixture } from 'ethereum-waffle'
 import { BigNumber, constants, ContractTransaction, Wallet } from 'ethers'
 import { ethers, waffle } from 'hardhat'
-import { IPegasysV2Pool, IWETH9, MockTimeSwapRouter, TestERC20 } from '../typechain'
+import { IPegasysV3Pool, IWETH9, MockTimeSwapRouter, TestERC20 } from '../typechain'
 import completeFixture from './shared/completeFixture'
 import { FeeAmount, TICK_SPACINGS } from './shared/constants'
 import { encodePriceSqrt } from './shared/encodePriceSqrt'
@@ -21,7 +21,7 @@ describe('SwapRouter gas tests', function () {
     weth9: IWETH9
     router: MockTimeSwapRouter
     tokens: [TestERC20, TestERC20, TestERC20]
-    pools: [IPegasysV2Pool, IPegasysV2Pool, IPegasysV2Pool]
+    pools: [IPegasysV3Pool, IPegasysV3Pool, IPegasysV3Pool]
   }> = async (wallets, provider) => {
     const { weth9, factory, router, tokens, nft } = await completeFixture(wallets, provider)
 
@@ -79,10 +79,10 @@ describe('SwapRouter gas tests', function () {
       factory.getPool(weth9.address, tokens[0].address, FeeAmount.MEDIUM),
     ])
 
-    const pools = poolAddresses.map((poolAddress) => new ethers.Contract(poolAddress, IPegasysV2PoolABI, wallet)) as [
-      IPegasysV2Pool,
-      IPegasysV2Pool,
-      IPegasysV2Pool
+    const pools = poolAddresses.map((poolAddress) => new ethers.Contract(poolAddress, IPegasysV3PoolABI, wallet)) as [
+      IPegasysV3Pool,
+      IPegasysV3Pool,
+      IPegasysV3Pool
     ]
 
     return {
@@ -96,7 +96,7 @@ describe('SwapRouter gas tests', function () {
   let weth9: IWETH9
   let router: MockTimeSwapRouter
   let tokens: [TestERC20, TestERC20, TestERC20]
-  let pools: [IPegasysV2Pool, IPegasysV2Pool, IPegasysV2Pool]
+  let pools: [IPegasysV3Pool, IPegasysV3Pool, IPegasysV3Pool]
 
   let loadFixture: ReturnType<typeof waffle.createFixtureLoader>
 
@@ -267,7 +267,7 @@ describe('SwapRouter gas tests', function () {
     })
 
     it('0 -> 1 minimal', async () => {
-      const calleeFactory = await ethers.getContractFactory('TestPegasysV2Callee')
+      const calleeFactory = await ethers.getContractFactory('TestPegasysV3Callee')
       const callee = await calleeFactory.deploy()
 
       await tokens[0].connect(trader).approve(callee.address, constants.MaxUint256)

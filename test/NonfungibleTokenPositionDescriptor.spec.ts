@@ -54,7 +54,7 @@ describe('NonfungibleTokenPositionDescriptor', () => {
   })
 
   beforeEach('load fixture', async () => {
-    ;({ tokens, nft, nftPositionDescriptor } = await loadFixture(nftPositionDescriptorCompleteFixture))
+    ; ({ tokens, nft, nftPositionDescriptor } = await loadFixture(nftPositionDescriptorCompleteFixture))
     const tokenFactory = await ethers.getContractFactory('TestERC20')
     weth9 = tokenFactory.attach(await nftPositionDescriptor.WETH9()) as TestERC20
   })
@@ -112,7 +112,7 @@ describe('NonfungibleTokenPositionDescriptor', () => {
   })
 
   describe('#tokenURI', () => {
-    it('displays ETH as token symbol for WETH token', async () => {
+    it('displays SYS as token symbol for WSYS token', async () => {
       const [token0, token1] = sortedTokens(weth9, tokens[1])
       await nft.createAndInitializePoolIfNecessary(
         token0.address,
@@ -137,9 +137,9 @@ describe('NonfungibleTokenPositionDescriptor', () => {
       })
 
       const metadata = extractJSONFromURI(await nft.tokenURI(1))
-      expect(metadata.name).to.match(/(\sETH\/TEST|TEST\/ETH)/)
-      expect(metadata.description).to.match(/(TEST-ETH|\sETH-TEST)/)
-      expect(metadata.description).to.match(/(\nETH\sAddress)/)
+      expect(metadata.name).to.match(/(\sSYS\/TEST|TEST\/SYS)/)
+      expect(metadata.description).to.match(/(TEST-SYS|\SYS-TEST)/)
+      expect(metadata.description).to.match(/(\SYS\sAddress)/)
     })
 
     it('displays returned token symbols when neither token is WETH ', async () => {

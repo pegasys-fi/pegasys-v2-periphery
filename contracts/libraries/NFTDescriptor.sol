@@ -2,10 +2,10 @@
 pragma solidity >=0.7.0;
 pragma abicoder v2;
 
-import '@pollum-io/v2-core/contracts/interfaces/IPegasysV2Pool.sol';
-import '@pollum-io/v2-core/contracts/libraries/TickMath.sol';
-import '@pollum-io/v2-core/contracts/libraries/BitMath.sol';
-import '@pollum-io/v2-core/contracts/libraries/FullMath.sol';
+import '@pollum-io/v3-core/contracts/interfaces/IPegasysV3Pool.sol';
+import '@pollum-io/v3-core/contracts/libraries/TickMath.sol';
+import '@pollum-io/v3-core/contracts/libraries/BitMath.sol';
+import '@pollum-io/v3-core/contracts/libraries/FullMath.sol';
 import '@openzeppelin/contracts/utils/Strings.sol';
 import '@openzeppelin/contracts/math/SafeMath.sol';
 import '@openzeppelin/contracts/math/SignedSafeMath.sol';
@@ -43,20 +43,18 @@ library NFTDescriptor {
 
     function constructTokenURI(ConstructTokenURIParams memory params) public pure returns (string memory) {
         string memory name = generateName(params, feeToPercentString(params.fee));
-        string memory descriptionPartOne =
-            generateDescriptionPartOne(
-                escapeQuotes(params.quoteTokenSymbol),
-                escapeQuotes(params.baseTokenSymbol),
-                addressToString(params.poolAddress)
-            );
-        string memory descriptionPartTwo =
-            generateDescriptionPartTwo(
-                params.tokenId.toString(),
-                escapeQuotes(params.baseTokenSymbol),
-                addressToString(params.quoteTokenAddress),
-                addressToString(params.baseTokenAddress),
-                feeToPercentString(params.fee)
-            );
+        string memory descriptionPartOne = generateDescriptionPartOne(
+            escapeQuotes(params.quoteTokenSymbol),
+            escapeQuotes(params.baseTokenSymbol),
+            addressToString(params.poolAddress)
+        );
+        string memory descriptionPartTwo = generateDescriptionPartTwo(
+            params.tokenId.toString(),
+            escapeQuotes(params.baseTokenSymbol),
+            addressToString(params.quoteTokenAddress),
+            addressToString(params.baseTokenAddress),
+            feeToPercentString(params.fee)
+        );
         string memory image = Base64.encode(bytes(generateSVGImage(params)));
 
         return
@@ -112,7 +110,7 @@ library NFTDescriptor {
         return
             string(
                 abi.encodePacked(
-                    'This NFT represents a liquidity position in a Pegasys V2 ',
+                    'This NFT represents a liquidity position in a Pegasys V3 ',
                     quoteTokenSymbol,
                     '-',
                     baseTokenSymbol,
@@ -152,11 +150,10 @@ library NFTDescriptor {
             );
     }
 
-    function generateName(ConstructTokenURIParams memory params, string memory feeTier)
-        private
-        pure
-        returns (string memory)
-    {
+    function generateName(
+        ConstructTokenURIParams memory params,
+        string memory feeTier
+    ) private pure returns (string memory) {
         return
             string(
                 abi.encodePacked(
@@ -253,7 +250,7 @@ library NFTDescriptor {
     function sigfigsRounded(uint256 value, uint8 digits) private pure returns (uint256, bool) {
         bool extraDigit;
         if (digits > 5) {
-            value = value.div((10**(digits - 5)));
+            value = value.div((10 ** (digits - 5)));
         }
         bool roundUp = value % 10 > 4;
         value = value.div(10);
@@ -276,12 +273,12 @@ library NFTDescriptor {
         uint256 difference = abs(int256(baseTokenDecimals).sub(int256(quoteTokenDecimals)));
         if (difference > 0 && difference <= 18) {
             if (baseTokenDecimals > quoteTokenDecimals) {
-                adjustedSqrtRatioX96 = sqrtRatioX96.mul(10**(difference.div(2)));
+                adjustedSqrtRatioX96 = sqrtRatioX96.mul(10 ** (difference.div(2)));
                 if (difference % 2 == 1) {
                     adjustedSqrtRatioX96 = FullMath.mulDiv(adjustedSqrtRatioX96, sqrt10X128, 1 << 128);
                 }
             } else {
-                adjustedSqrtRatioX96 = sqrtRatioX96.div(10**(difference.div(2)));
+                adjustedSqrtRatioX96 = sqrtRatioX96.div(10 ** (difference.div(2)));
                 if (difference % 2 == 1) {
                     adjustedSqrtRatioX96 = FullMath.mulDiv(adjustedSqrtRatioX96, 1 << 128, sqrt10X128);
                 }
@@ -305,13 +302,13 @@ library NFTDescriptor {
         uint256 adjustedSqrtRatioX96 = adjustForDecimalPrecision(sqrtRatioX96, baseTokenDecimals, quoteTokenDecimals);
         uint256 value = FullMath.mulDiv(adjustedSqrtRatioX96, adjustedSqrtRatioX96, 1 << 64);
 
-        bool priceBelow1 = adjustedSqrtRatioX96 < 2**96;
+        bool priceBelow1 = adjustedSqrtRatioX96 < 2 ** 96;
         if (priceBelow1) {
             // 10 ** 43 is precision needed to retreive 5 sigfigs of smallest possible price + 1 for rounding
-            value = FullMath.mulDiv(value, 10**44, 1 << 128);
+            value = FullMath.mulDiv(value, 10 ** 44, 1 << 128);
         } else {
             // leave precision for 4 decimal places + 1 place for rounding
-            value = FullMath.mulDiv(value, 10**5, 1 << 128);
+            value = FullMath.mulDiv(value, 10 ** 5, 1 << 128);
         }
 
         // get digit count
@@ -395,7 +392,7 @@ library NFTDescriptor {
             params.sigfigIndex = uint8((params.bufferLength).sub(2));
             params.isLessThanOne = true;
         }
-        params.sigfigs = uint256(fee).div(10**(digits.sub(numSigfigs)));
+        params.sigfigs = uint256(fee).div(10 ** (digits.sub(numSigfigs)));
         params.isPercent = true;
         params.decimalIndex = digits > 4 ? uint8(digits.sub(4)) : 0;
 
@@ -407,39 +404,34 @@ library NFTDescriptor {
     }
 
     function generateSVGImage(ConstructTokenURIParams memory params) internal pure returns (string memory svg) {
-        NFTSVG.SVGParams memory svgParams =
-            NFTSVG.SVGParams({
-                quoteToken: addressToString(params.quoteTokenAddress),
-                baseToken: addressToString(params.baseTokenAddress),
-                poolAddress: params.poolAddress,
-                quoteTokenSymbol: params.quoteTokenSymbol,
-                baseTokenSymbol: params.baseTokenSymbol,
-                feeTier: feeToPercentString(params.fee),
-                tickLower: params.tickLower,
-                tickUpper: params.tickUpper,
-                tickSpacing: params.tickSpacing,
-                overRange: overRange(params.tickLower, params.tickUpper, params.tickCurrent),
-                tokenId: params.tokenId,
-                color0: tokenToColorHex(uint256(params.quoteTokenAddress), 136),
-                color1: tokenToColorHex(uint256(params.baseTokenAddress), 136),
-                color2: tokenToColorHex(uint256(params.quoteTokenAddress), 0),
-                color3: tokenToColorHex(uint256(params.baseTokenAddress), 0),
-                x1: scale(getCircleCoord(uint256(params.quoteTokenAddress), 16, params.tokenId), 0, 255, 16, 274),
-                y1: scale(getCircleCoord(uint256(params.baseTokenAddress), 16, params.tokenId), 0, 255, 100, 484),
-                x2: scale(getCircleCoord(uint256(params.quoteTokenAddress), 32, params.tokenId), 0, 255, 16, 274),
-                y2: scale(getCircleCoord(uint256(params.baseTokenAddress), 32, params.tokenId), 0, 255, 100, 484),
-                x3: scale(getCircleCoord(uint256(params.quoteTokenAddress), 48, params.tokenId), 0, 255, 16, 274),
-                y3: scale(getCircleCoord(uint256(params.baseTokenAddress), 48, params.tokenId), 0, 255, 100, 484)
-            });
+        NFTSVG.SVGParams memory svgParams = NFTSVG.SVGParams({
+            quoteToken: addressToString(params.quoteTokenAddress),
+            baseToken: addressToString(params.baseTokenAddress),
+            poolAddress: params.poolAddress,
+            quoteTokenSymbol: params.quoteTokenSymbol,
+            baseTokenSymbol: params.baseTokenSymbol,
+            feeTier: feeToPercentString(params.fee),
+            tickLower: params.tickLower,
+            tickUpper: params.tickUpper,
+            tickSpacing: params.tickSpacing,
+            overRange: overRange(params.tickLower, params.tickUpper, params.tickCurrent),
+            tokenId: params.tokenId,
+            color0: tokenToColorHex(uint256(params.quoteTokenAddress), 136),
+            color1: tokenToColorHex(uint256(params.baseTokenAddress), 136),
+            color2: tokenToColorHex(uint256(params.quoteTokenAddress), 0),
+            color3: tokenToColorHex(uint256(params.baseTokenAddress), 0),
+            x1: scale(getCircleCoord(uint256(params.quoteTokenAddress), 16, params.tokenId), 0, 255, 16, 274),
+            y1: scale(getCircleCoord(uint256(params.baseTokenAddress), 16, params.tokenId), 0, 255, 100, 484),
+            x2: scale(getCircleCoord(uint256(params.quoteTokenAddress), 32, params.tokenId), 0, 255, 16, 274),
+            y2: scale(getCircleCoord(uint256(params.baseTokenAddress), 32, params.tokenId), 0, 255, 100, 484),
+            x3: scale(getCircleCoord(uint256(params.quoteTokenAddress), 48, params.tokenId), 0, 255, 16, 274),
+            y3: scale(getCircleCoord(uint256(params.baseTokenAddress), 48, params.tokenId), 0, 255, 100, 484)
+        });
 
         return NFTSVG.generateSVG(svgParams);
     }
 
-    function overRange(
-        int24 tickLower,
-        int24 tickUpper,
-        int24 tickCurrent
-    ) private pure returns (int8) {
+    function overRange(int24 tickLower, int24 tickUpper, int24 tickCurrent) private pure returns (int8) {
         if (tickCurrent < tickLower) {
             return -1;
         } else if (tickCurrent > tickUpper) {
@@ -463,11 +455,7 @@ library NFTDescriptor {
         return string((token >> offset).toHexStringNoPrefix(3));
     }
 
-    function getCircleCoord(
-        uint256 tokenAddress,
-        uint256 offset,
-        uint256 tokenId
-    ) internal pure returns (uint256) {
+    function getCircleCoord(uint256 tokenAddress, uint256 offset, uint256 tokenId) internal pure returns (uint256) {
         return (sliceTokenHex(tokenAddress, offset) * tokenId) % 255;
     }
 

@@ -5,10 +5,10 @@ import {
   MockTimeNonfungiblePositionManager,
   MockTimeSwapRouter,
   PairFlash,
-  IPegasysV2Pool,
+  IPegasysV3Pool,
   TestERC20,
   TestERC20Metadata,
-  IPegasysV2Factory,
+  IPegasysV3Factory,
   NFTDescriptor,
   Quoter,
   SwapRouter,
@@ -31,7 +31,7 @@ describe('PairFlash test', () => {
   let nft: MockTimeNonfungiblePositionManager
   let token0: TestERC20
   let token1: TestERC20
-  let factory: IPegasysV2Factory
+  let factory: IPegasysV3Factory
   let quoter: Quoter
 
   async function createPool(tokenAddressA: string, tokenAddressB: string, fee: FeeAmount, price: BigNumber) {

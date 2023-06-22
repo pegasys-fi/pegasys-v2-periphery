@@ -1,20 +1,20 @@
 {
-  "name": "@pollum-io/v2-periphery",
-  "description": "🎚 Peripheral smart contracts for interacting with Pegasys V2",
+  "name": "@pollum-io/v3-periphery",
+  "description": "🎚 Peripheral smart contracts for interacting with Pegasys V3",
   "license": "gpl-3.0",
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.0.2",
+  "version": "0.0.1",
   "homepage": "https://pegasys.fi",
   "keywords": [
     "pegasys",
     "periphery",
-    "v2"
+    "v3"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/pegasys-fi/v2-periphery"
+    "url": "https://github.com/pegasys-fi/v3-periphery"
   },
   "files": [
     "contracts/base",
@@ -32,7 +32,7 @@
     "@openzeppelin/contracts": "3.4.2-solc-0.7",
     "@uniswap/lib": "^4.0.1-alpha",
     "@pollum-io/pegasys-protocol": "0.0.17",
-    "@pollum-io/v2-core": "0.0.2",
+    "@pollum-io/v3-core": "0.0.1",
     "base64-sol": "1.0.1"
   },
   "devDependencies": {

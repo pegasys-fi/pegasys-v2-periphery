@@ -1,9 +1,9 @@
-import { abi as IPegasysV2PoolABI } from '@pollum-io/v2-core/artifacts/contracts/interfaces/IPegasysV2Pool.sol/IPegasysV2Pool.json'
+import { abi as IPegasysV3PoolABI } from '@pollum-io/v3-core/artifacts/contracts/interfaces/IPegasysV3Pool.sol/IPegasysV3Pool.json'
 import { Fixture } from 'ethereum-waffle'
 import { BigNumberish, constants, Wallet } from 'ethers'
 import { ethers, waffle } from 'hardhat'
 import {
-  IPegasysV2Factory,
+  IPegasysV3Factory,
   IWETH9,
   MockTimeNonfungiblePositionManager,
   NonfungiblePositionManagerPositionsGasTest,
@@ -31,7 +31,7 @@ describe('NonfungiblePositionManager', () => {
 
   const nftFixture: Fixture<{
     nft: MockTimeNonfungiblePositionManager
-    factory: IPegasysV2Factory
+    factory: IPegasysV3Factory
     tokens: [TestERC20, TestERC20, TestERC20]
     weth9: IWETH9
     router: SwapRouter
@@ -54,7 +54,7 @@ describe('NonfungiblePositionManager', () => {
     }
   }
 
-  let factory: IPegasysV2Factory
+  let factory: IPegasysV3Factory
   let nft: MockTimeNonfungiblePositionManager
   let tokens: [TestERC20, TestERC20, TestERC20]
   let weth9: IWETH9
@@ -130,7 +130,7 @@ describe('NonfungiblePositionManager', () => {
         FeeAmount.MEDIUM
       )
       await factory.createPool(tokens[0].address, tokens[1].address, FeeAmount.MEDIUM)
-      const pool = new ethers.Contract(expectedAddress, IPegasysV2PoolABI, wallet)
+      const pool = new ethers.Contract(expectedAddress, IPegasysV3PoolABI, wallet)
 
       await pool.initialize(encodePriceSqrt(3, 1))
       const code = await wallet.provider.getCode(expectedAddress)

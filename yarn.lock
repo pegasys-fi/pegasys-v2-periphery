@@ -1151,10 +1151,10 @@
   dependencies:
     web3 "^1.7.3"
 
-"@pollum-io/v2-core@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@pollum-io/v2-core/-/v2-core-0.0.2.tgz#1632b01c835f05e2367175ecfd3d5ae60bcb6611"
-  integrity sha512-J7/5X7CBgn2TPxJL9QVF8SopYgthz1HLBDUEeZwrCXOZMlwU16+7L/ZLKkoBfPxqppy5T4QaYMNPgA6h9QwXLQ==
+"@pollum-io/v3-core@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@pollum-io/v3-core/-/v3-core-0.0.1.tgz#7206e32b6bfbb5e21098eab29d45643944e59d53"
+  integrity sha512-l4VnKlKOokoIAzQdpoyHQWmWhfsl0qU5pAlNlsMI0G1ebCBv5sbapZfUr4vs4hiHO1ZxQBPfKQiC654GJC+C2w==
   dependencies:
     dotenv "^16.0.3"
 

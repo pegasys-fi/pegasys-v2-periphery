@@ -2,9 +2,9 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import '@pollum-io/v2-core/contracts/interfaces/IPegasysV2Factory.sol';
-import '@pollum-io/v2-core/contracts/interfaces/callback/IPegasysV2MintCallback.sol';
-import '@pollum-io/v2-core/contracts/libraries/TickMath.sol';
+import '@pollum-io/v3-core/contracts/interfaces/IPegasysV3Factory.sol';
+import '@pollum-io/v3-core/contracts/interfaces/callback/IPegasysV3MintCallback.sol';
+import '@pollum-io/v3-core/contracts/libraries/TickMath.sol';
 
 import '../libraries/PoolAddress.sol';
 import '../libraries/CallbackValidation.sol';
@@ -14,19 +14,15 @@ import './PeripheryPayments.sol';
 import './PeripheryImmutableState.sol';
 
 /// @title Liquidity management functions
-/// @notice Internal functions for safely managing liquidity in Pegasys V2
-abstract contract LiquidityManagement is IPegasysV2MintCallback, PeripheryImmutableState, PeripheryPayments {
+/// @notice Internal functions for safely managing liquidity in Pegasys V3
+abstract contract LiquidityManagement is IPegasysV3MintCallback, PeripheryImmutableState, PeripheryPayments {
     struct MintCallbackData {
         PoolAddress.PoolKey poolKey;
         address payer;
     }
 
-    /// @inheritdoc IPegasysV2MintCallback
-    function pegasysV2MintCallback(
-        uint256 amount0Owed,
-        uint256 amount1Owed,
-        bytes calldata data
-    ) external override {
+    /// @inheritdoc IPegasysV3MintCallback
+    function pegasysV3MintCallback(uint256 amount0Owed, uint256 amount1Owed, bytes calldata data) external override {
         MintCallbackData memory decoded = abi.decode(data, (MintCallbackData));
         CallbackValidation.verifyCallback(factory, decoded.poolKey);
 
@@ -48,19 +44,16 @@ abstract contract LiquidityManagement is IPegasysV2MintCallback, PeripheryImmuta
     }
 
     /// @notice Add liquidity to an initialized pool
-    function addLiquidity(AddLiquidityParams memory params)
-        internal
-        returns (
-            uint128 liquidity,
-            uint256 amount0,
-            uint256 amount1,
-            IPegasysV2Pool pool
-        )
-    {
-        PoolAddress.PoolKey memory poolKey =
-            PoolAddress.PoolKey({token0: params.token0, token1: params.token1, fee: params.fee});
+    function addLiquidity(
+        AddLiquidityParams memory params
+    ) internal returns (uint128 liquidity, uint256 amount0, uint256 amount1, IPegasysV3Pool pool) {
+        PoolAddress.PoolKey memory poolKey = PoolAddress.PoolKey({
+            token0: params.token0,
+            token1: params.token1,
+            fee: params.fee
+        });
 
-        pool = IPegasysV2Pool(PoolAddress.computeAddress(factory, poolKey));
+        pool = IPegasysV3Pool(PoolAddress.computeAddress(factory, poolKey));
 
         // compute the liquidity amount
         {

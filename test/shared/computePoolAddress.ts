@@ -1,4 +1,4 @@
-import { bytecode } from '@pollum-io/v2-core/artifacts/contracts/PegasysV2Pool.sol/PegasysV2Pool.json'
+import { bytecode } from '@pollum-io/v3-core/artifacts/contracts/PegasysV3Pool.sol/PegasysV3Pool.json'
 import { utils } from 'ethers'
 
 export const POOL_BYTECODE_HASH = utils.keccak256(bytecode)

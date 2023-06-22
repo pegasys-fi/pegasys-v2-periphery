@@ -5,9 +5,9 @@ import {
   PositionValueTest,
   SwapRouter,
   MockTimeNonfungiblePositionManager,
-  IPegasysV2Pool,
+  IPegasysV3Pool,
   TestERC20,
-  IPegasysV2Factory,
+  IPegasysV3Factory,
 } from '../typechain'
 import { FeeAmount, MaxUint128, TICK_SPACINGS } from './shared/constants'
 import { getMaxTick, getMinTick } from './shared/ticks'
@@ -20,7 +20,7 @@ import snapshotGasCost from './shared/snapshotGasCost'
 
 import { expect } from './shared/expect'
 
-import { abi as IPegasysV2PoolABI } from '@pollum-io/v2-core/artifacts/contracts/interfaces/IPegasysV2Pool.sol/IPegasysV2Pool.json'
+import { abi as IPegasysV3PoolABI } from '@pollum-io/v3-core/artifacts/contracts/interfaces/IPegasysV3Pool.sol/IPegasysV3Pool.json'
 
 describe('PositionValue', async () => {
   const [...wallets] = waffle.provider.getWallets()
@@ -29,7 +29,7 @@ describe('PositionValue', async () => {
     tokens: [TestERC20, TestERC20, TestERC20]
     nft: MockTimeNonfungiblePositionManager
     router: SwapRouter
-    factory: IPegasysV2Factory
+    factory: IPegasysV3Factory
   }> = async (wallets, provider) => {
     const { nft, router, tokens, factory } = await completeFixture(wallets, provider)
     const positionValueFactory = await ethers.getContractFactory('PositionValueTest')
@@ -55,7 +55,7 @@ describe('PositionValue', async () => {
   let positionValue: PositionValueTest
   let nft: MockTimeNonfungiblePositionManager
   let router: SwapRouter
-  let factory: IPegasysV2Factory
+  let factory: IPegasysV3Factory
 
   let amountDesired: BigNumberish
 
@@ -74,7 +74,7 @@ describe('PositionValue', async () => {
     )
 
     const poolAddress = computePoolAddress(factory.address, [tokens[0].address, tokens[1].address], FeeAmount.MEDIUM)
-    pool = new ethers.Contract(poolAddress, IPegasysV2PoolABI, wallets[0])
+    pool = new ethers.Contract(poolAddress, IPegasysV3PoolABI, wallets[0])
   })
 
   describe('#total', () => {

@@ -3,7 +3,7 @@ pragma solidity >=0.5.0;
 
 /// @title Provides functions for deriving a pool address from the factory, tokens, and the fee
 library PoolAddress {
-    bytes32 internal constant POOL_INIT_CODE_HASH = 0x8e96f21651a78ab0d329ff44bdd6d00fac90998fc170340ad5301cb752dab5d2;
+    bytes32 internal constant POOL_INIT_CODE_HASH = 0x4a995152ad4a45ce61f15e514146bc642453130f5c3ef14b85098e9c6266c43d;
 
     /// @notice The identifying key of the poo
     struct PoolKey {
@@ -23,7 +23,7 @@ library PoolAddress {
     }
 
     /// @notice Deterministically computes the pool address given the factory and PoolKey
-    /// @param factory The Pegasys V2 factory contract address
+    /// @param factory The Pegasys V3 factory contract address
     /// @param key The PoolKey
     /// @return pool The contract address of the V3 pool
     function computeAddress(address factory, PoolKey memory key) internal pure returns (address pool) {
